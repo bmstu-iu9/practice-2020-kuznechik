@@ -76,25 +76,14 @@ static void mgm_128_encrypt_block(const uint8_t deployed_key[MGM_128_DEPLOYED_KE
 {
     __m128i out128 = _mm_loadu_si128((const __m128i*)in);
     __m128i *round_key = (__m128i *)deployed_key;
-    out128 = _mm_xor_si128(round_key[0], out128); //func X
-    out128 = func_LS(out128);
-    out128 = _mm_xor_si128(round_key[1], out128);
-    out128 = func_LS(out128);
-    out128 = _mm_xor_si128(round_key[2], out128);
-    out128 = func_LS(out128);
-    out128 = _mm_xor_si128(round_key[3], out128);
-    out128 = func_LS(out128);
-    out128 = _mm_xor_si128(round_key[4], out128);
-    out128 = func_LS(out128);
-    out128 = _mm_xor_si128(round_key[5], out128);
-    out128 = func_LS(out128);
-    out128 = _mm_xor_si128(round_key[6], out128);
-    out128 = func_LS(out128);
-    out128 = _mm_xor_si128(round_key[7], out128);
-    out128 = func_LS(out128);
-    out128 = _mm_xor_si128(round_key[8], out128);
-    out128 = func_LS(out128);
-    out128 = _mm_xor_si128(round_key[9], out128);
+    
+    // X[K10]LSX[K9]...LSX[K1](a)
+    for(int i = 0; i < ROUNDS-1; i++)
+    {
+    	out128 = _mm_xor_si128(round_key[i], out128); //func X
+    	out128 = func_LS(out128);
+    }
+    out128 = _mm_xor_si128(round_key[ROUNDS-1], out128);
     memcpy(out, &out128, MGM_128_BLOCK_SIZE);
 }
 

@@ -16,29 +16,29 @@ inline static void func_X(uint8_t out[MGM_128_BLOCK_SIZE],
 inline static void func_LS(uint8_t a[MGM_128_BLOCK_SIZE])
 {
     const uint64_t *b0 = (uint64_t*)&tableLS[a[0]*MGM_128_BLOCK_SIZE + 0x0000];
-    const uint64_t *b1 = (uint64_t*)&tableLS[a[0]*MGM_128_BLOCK_SIZE + 0x1000];
-    const uint64_t *b2 = (uint64_t*)&tableLS[a[0]*MGM_128_BLOCK_SIZE + 0x2000];
-    const uint64_t *b3 = (uint64_t*)&tableLS[a[0]*MGM_128_BLOCK_SIZE + 0x3000];
-    const uint64_t *b4 = (uint64_t*)&tableLS[a[0]*MGM_128_BLOCK_SIZE + 0x4000];
-    const uint64_t *b5 = (uint64_t*)&tableLS[a[0]*MGM_128_BLOCK_SIZE + 0x5000];
-    const uint64_t *b6 = (uint64_t*)&tableLS[a[0]*MGM_128_BLOCK_SIZE + 0x6000];
-    const uint64_t *b7 = (uint64_t*)&tableLS[a[0]*MGM_128_BLOCK_SIZE + 0x7000];
-    const uint64_t *b8 = (uint64_t*)&tableLS[a[0]*MGM_128_BLOCK_SIZE + 0x8000];
-    const uint64_t *b9 = (uint64_t*)&tableLS[a[0]*MGM_128_BLOCK_SIZE + 0x9000];
-    const uint64_t *b10 = (uint64_t*)&tableLS[a[0]*MGM_128_BLOCK_SIZE + 0xA000];
-    const uint64_t *b11 = (uint64_t*)&tableLS[a[0]*MGM_128_BLOCK_SIZE + 0xB000];
-    const uint64_t *b12 = (uint64_t*)&tableLS[a[0]*MGM_128_BLOCK_SIZE + 0xC000];
-    const uint64_t *b13 = (uint64_t*)&tableLS[a[0]*MGM_128_BLOCK_SIZE + 0xD000];
-    const uint64_t *b14 = (uint64_t*)&tableLS[a[0]*MGM_128_BLOCK_SIZE + 0xE000];
-    const uint64_t *b15 = (uint64_t*)&tableLS[a[0]*MGM_128_BLOCK_SIZE + 0xF000];
+    const uint64_t *b1 = (uint64_t*)&tableLS[a[1]*MGM_128_BLOCK_SIZE + 0x1000];
+    const uint64_t *b2 = (uint64_t*)&tableLS[a[2]*MGM_128_BLOCK_SIZE + 0x2000];
+    const uint64_t *b3 = (uint64_t*)&tableLS[a[3]*MGM_128_BLOCK_SIZE + 0x3000];
+    const uint64_t *b4 = (uint64_t*)&tableLS[a[4]*MGM_128_BLOCK_SIZE + 0x4000];
+    const uint64_t *b5 = (uint64_t*)&tableLS[a[5]*MGM_128_BLOCK_SIZE + 0x5000];
+    const uint64_t *b6 = (uint64_t*)&tableLS[a[6]*MGM_128_BLOCK_SIZE + 0x6000];
+    const uint64_t *b7 = (uint64_t*)&tableLS[a[7]*MGM_128_BLOCK_SIZE + 0x7000];
+    const uint64_t *b8 = (uint64_t*)&tableLS[a[8]*MGM_128_BLOCK_SIZE + 0x8000];
+    const uint64_t *b9 = (uint64_t*)&tableLS[a[9]*MGM_128_BLOCK_SIZE + 0x9000];
+    const uint64_t *b10 = (uint64_t*)&tableLS[a[10]*MGM_128_BLOCK_SIZE + 0xA000];
+    const uint64_t *b11 = (uint64_t*)&tableLS[a[11]*MGM_128_BLOCK_SIZE + 0xB000];
+    const uint64_t *b12 = (uint64_t*)&tableLS[a[12]*MGM_128_BLOCK_SIZE + 0xC000];
+    const uint64_t *b13 = (uint64_t*)&tableLS[a[13]*MGM_128_BLOCK_SIZE + 0xD000];
+    const uint64_t *b14 = (uint64_t*)&tableLS[a[14]*MGM_128_BLOCK_SIZE + 0xE000];
+    const uint64_t *b15 = (uint64_t*)&tableLS[a[15]*MGM_128_BLOCK_SIZE + 0xF000];
     uint64_t *a64 = (uint64_t*)a;
     a64[0] = b0[0]^b1[0]^b2[0]^b3[0]^b4[0]^b5[0]^b6[0]^b7[0]^b8[0]
                 ^b9[0]^b10[0]^b11[0]^b12[0]^b13[0]^b14[0]^b15[0];
-    a64[1] = b1[1]^b1[1]^b2[1]^b3[1]^b4[1]^b5[1]^b6[1]^b7[1]^b8[1]
-                ^b9[1]^b11[1]^b11[1]^b12[1]^b13[1]^b14[1]^b15[1];
+    a64[1] = b0[1]^b1[1]^b2[1]^b3[1]^b4[1]^b5[1]^b6[1]^b7[1]^b8[1]
+                ^b9[1]^b10[1]^b11[1]^b12[1]^b13[1]^b14[1]^b15[1];
 }
 
-inline static void F(uint8_t k[MGM_128_BLOCK_SIZE], //  ---> (f(a1) + a0, a1)
+inline static void func_F(uint8_t k[MGM_128_BLOCK_SIZE], //  ---> (f(a1) + a0, a1)
                      uint8_t a1[MGM_128_BLOCK_SIZE],
                      uint8_t a0[MGM_128_BLOCK_SIZE])
 {
@@ -140,7 +140,7 @@ static uint8x16_t multiplication_gf_128(const uint8x16_t a,
     return vqtbl1q_u8(vrbitq_u8(vreinterpretq_u8_u64(tmp0)), BSWAP_MASK);
 }
 
-static void MGM_128_generate_next_mgm_mac_block(MGM128Ctx *ctx, const uint8_t* in)
+static void mgm_128_generate_next_mac_block(MGM128Ctx *ctx, const uint8_t* in)
 {
     //ctx->macHash accumulates hash sum for imitation
     //ctx->macCounter contains current block-counter
@@ -153,7 +153,7 @@ static void MGM_128_generate_next_mgm_mac_block(MGM128Ctx *ctx, const uint8_t* i
     incr_left(ctx->macCounter);
 }
 
-static void MGM_128_mgm_finalize_last_block(MGM128Ctx *ctx)
+static void mgm_128_finalize_last_block(MGM128Ctx *ctx)
 {
     uint8x16_t block; //last block for calculation mac
     uint8x16_t x; //multiplication_gf_128(block, ctx->gamma) result
