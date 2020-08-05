@@ -102,13 +102,18 @@ void test() {
 
     for(i = 0; i < MGM_128_BLOCK_SIZE; i++) {
         if (imitation[i] != encrypted_imitation[i]) {
+            err = -1;
             printf("imitation err: 0x%.2X != 0x%.2X\n", imitation[i], encrypted_imitation[i]);
         }
     }
     for(i = 0; i < sizeof(cipher); i++) {
         if (encrypted[i] != cipher[i]) {
+            err = -1;
             printf("encrypted err: 0x%.2X != 0x%.2X\n", imitation[i], encrypted_imitation[i]);
         }
+    }
+    if (err == OK) {
+    	printf("SUCCESS\n");
     }
 
 cleanup:
