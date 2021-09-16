@@ -216,7 +216,7 @@ int mgm_128_finalize(MGM128Ctx *ctx, uint8_t mac[MGM_128_BLOCK_SIZE])
         return -1;
     }
 
-    if (ctx->associatedSize == 0 || ctx->dataSize == 0) {
+    if (ctx->dataSize == 0) {
         return -2;
     }
 
